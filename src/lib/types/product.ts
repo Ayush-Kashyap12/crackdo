@@ -12,6 +12,7 @@ export interface ProductDataProps {
   bidIncrementBy: number;
   //   key value pair for details
   details: detailsProps[];
+  category?: string;
   slug: string;
 }
 

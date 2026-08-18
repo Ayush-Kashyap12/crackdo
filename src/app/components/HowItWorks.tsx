@@ -1,108 +1,106 @@
 "use client";
 
 import {
+  Badge,
   Box,
   Container,
   Flex,
   Heading,
   Icon,
+  SimpleGrid,
   Stack,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { ReactElement } from "react";
-import {
-  FcCurrencyExchange,
-  FcDonate,
-  FcFeedIn,
-  FcFeedback,
-} from "react-icons/fc";
+import { FiCheckSquare, FiDollarSign, FiSearch, FiTruck } from "react-icons/fi";
 
-interface CardProps {
-  heading: string;
-  description: string;
-  icon: ReactElement;
-  href: string;
-}
-
-const Card = ({ heading, description, icon, href }: CardProps) => {
-  return (
-    <Box
-      maxW={{ base: "full", md: "275px" }}
-      w={"full"}
-      borderWidth="1px"
-      borderRadius="lg"
-      overflow="hidden"
-      p={5}
-    >
-      <Stack align={"start"} spacing={2}>
-        <Flex
-          w={16}
-          h={16}
-          align={"center"}
-          justify={"center"}
-          color={"white"}
-          rounded={"full"}
-          bg={useColorModeValue("gray.100", "gray.700")}
-        >
-          {icon}
-        </Flex>
-        <Box mt={2}>
-          <Heading size="md">{heading}</Heading>
-          <Text mt={1} fontSize={"lg"}>
-            {description}
-          </Text>
-        </Box>
-        =
-      </Stack>
-    </Box>
-  );
-};
+const STEPS = [
+  {
+    step: "01",
+    title: "Browse Verified Lots",
+    description: "Explore curated auctions backed by merchant identity proofing and product authentication.",
+    icon: FiSearch,
+  },
+  {
+    step: "02",
+    title: "Place Escrow Bids",
+    description: "Submit live bids in real time. Your funds remain locked securely in escrow until item receipt.",
+    icon: FiDollarSign,
+  },
+  {
+    step: "03",
+    title: "Fair Anti-Snipe Finish",
+    description: "Last-second bids trigger automatic 2-minute timer extensions for transparent competitive bidding.",
+    icon: FiCheckSquare,
+  },
+  {
+    step: "04",
+    title: "Inspected & Delivered",
+    description: "Inspect your item upon delivery. Funds release to the seller only after your final approval.",
+    icon: FiTruck,
+  },
+];
 
 export default function HowItWorks() {
-  return (
-    <Box id="how_it_works" p={4}>
-      <Stack spacing={4} as={Container} maxW={"3xl"} textAlign={"center"}>
-        <Heading fontSize={{ base: "2xl", sm: "4xl" }} fontWeight={"bold"}>
-          How It Works
-        </Heading>
-      </Stack>
+  const cardBg = "gray.900";
+  const borderColor = "gray.800";
 
-      <Container maxW={"100%"} mt={12}>
-        <Flex flexWrap="wrap" gridGap={6} justify="center">
-          <Card
-            heading={"Register for free"}
-            icon={<Icon as={FcFeedback} w={10} h={10} />}
-            description={
-              "Begin your journey by signing up for our platform at no cost."
-            }
-            href={"#"}
-          />
-          <Card
-            heading={"Buy or Bid"}
-            icon={<Icon as={FcFeedIn} w={10} h={10} />}
-            description={
-              " Explore our marketplace and either purchase your desired items or participate in exciting bidding opportunities."
-            }
-            href={"#"}
-          />
-          <Card
-            heading={"Submit a Bid"}
-            icon={<Icon as={FcDonate} w={10} h={10} />}
-            description={
-              "Place your bid on the items you desire, and let the excitement of the auction begin!"
-            }
-            href={"#"}
-          />
-          <Card
-            heading={"Win"}
-            icon={<Icon as={FcCurrencyExchange} w={10} h={10} />}
-            description={
-              " If your bid is successful, you'll emerge victorious and take home the item you coveted!"
-            }
-            href={"#"}
-          />
-        </Flex>
+  return (
+    <Box id="how_it_works" py={14} px={4} my={8}>
+      <Container maxW="1250px">
+        <Stack spacing={3} textAlign="center" mb={12}>
+          <Badge colorScheme="blue" bg="blue.600" color="white" mx="auto" px={4} py={1.5} borderRadius="full" fontSize="14px" fontWeight="800">
+            SIMPLE & SECURE
+          </Badge>
+          <Heading size="xl" fontWeight="900" color="white">
+            How Escrow Bidding Works on CRACKDO
+          </Heading>
+          <Text color="gray.300" maxW="680px" mx="auto" fontSize="16px" fontWeight="500">
+            Buy and sell high-value lots with complete confidence in 4 straightforward steps.
+          </Text>
+        </Stack>
+
+        <SimpleGrid columns={{ base: 1, sm: 2, lg: 4 }} spacing={6}>
+          {STEPS.map((s, idx) => (
+            <Stack
+              key={idx}
+              bg={cardBg}
+              p={7}
+              borderRadius="2xl"
+              border="1px solid"
+              borderColor={borderColor}
+              boxShadow="lg"
+              spacing={5}
+              position="relative"
+              transition="all 0.3s"
+              _hover={{ transform: "translateY(-4px)", borderColor: "blue.400" }}
+            >
+              <Flex justify="space-between" align="center">
+                <Flex
+                  w={14}
+                  h={14}
+                  borderRadius="xl"
+                  bg="blue.500"
+                  color="white"
+                  align="center"
+                  justify="center"
+                >
+                  <Icon as={s.icon} boxSize={6} />
+                </Flex>
+                <Text fontSize="28px" fontWeight="900" color="gray.700">
+                  {s.step}
+                </Text>
+              </Flex>
+
+              <Heading size="md" fontWeight="800" color="white" fontSize="18px">
+                {s.title}
+              </Heading>
+              <Text fontSize="15px" color="gray.300" lineHeight="1.6" fontWeight="500">
+                {s.description}
+              </Text>
+            </Stack>
+          ))}
+        </SimpleGrid>
       </Container>
     </Box>
   );
