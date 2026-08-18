@@ -144,16 +144,6 @@ export default function Header() {
         <Stack direction={"row"} align="center" spacing={{ base: 1.5, sm: 3 }}>
           <ThemeToggle />
 
-          <IconButton
-            aria-label="open github"
-            size="md"
-            variant="ghost"
-            color={textColor}
-            _hover={{ bg: useColorModeValue("gray.100", "gray.800") }}
-            icon={colorMode === "light" ? <RiGithubFill size={20} /> : <RiGithubLine size={20} />}
-            onClick={() => open(GITHUB_REPO, "_blank")}
-          />
-
           <Link href="/register">
             <Button
               size="md"
