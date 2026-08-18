@@ -7,16 +7,15 @@ import {
   Flex,
   HStack,
   Icon,
-  Input,
   RangeSlider,
   RangeSliderFilledTrack,
   RangeSliderThumb,
   RangeSliderTrack,
-  Stack,
   Text,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { FiDollarSign, FiFilter, FiRefreshCw } from "react-icons/fi";
+import { FiFilter } from "react-icons/fi";
 import { useCurrency, Currency } from "../../lib/CurrencyContext";
 
 interface PriceFilterProps {
@@ -24,11 +23,14 @@ interface PriceFilterProps {
 }
 
 export default function PriceFilter({ onPriceChange }: PriceFilterProps) {
-  const { currency, setCurrency, formatPrice, usdToInrRate } = useCurrency();
+  const { currency, setCurrency, formatPrice } = useCurrency();
+  const cardBg = useColorModeValue("white", "rgba(12, 16, 25, 0.85)");
+  const borderColor = useColorModeValue("gray.200", "gray.800");
+  const textColor = useColorModeValue("gray.800", "white");
+  const subTextColor = useColorModeValue("gray.600", "gray.300");
 
-  // Price range in USD base units
-  const minUSDLimit = 1.2; // ~$1 USD or ~₹100 INR
-  const maxUSDLimit = 3500; // ~$3500 USD or ~₹2,90,000 INR
+  const minUSDLimit = 1.2;
+  const maxUSDLimit = 3500;
 
   const [priceRangeUSD, setPriceRangeUSD] = useState<[number, number]>([minUSDLimit, maxUSDLimit]);
 
@@ -41,20 +43,20 @@ export default function PriceFilter({ onPriceChange }: PriceFilterProps) {
     setCurrency(newCurrency);
   };
 
-  // Convert for display
   const displayMin = formatPrice(priceRangeUSD[0]);
   const displayMax = formatPrice(priceRangeUSD[1]);
 
   return (
     <Box
-      bg="rgba(12, 16, 25, 0.85)"
+      bg={cardBg}
       backdropFilter="blur(14px)"
-      p={4}
+      p={{ base: 3.5, sm: 4 }}
       borderRadius="2xl"
       border="1px solid"
-      borderColor="gray.800"
-      boxShadow="lg"
+      borderColor={borderColor}
+      boxShadow={useColorModeValue("sm", "lg")}
       w="full"
+      maxW="100%"
     >
       <Flex
         direction={{ base: "column", md: "row" }}
@@ -63,26 +65,26 @@ export default function PriceFilter({ onPriceChange }: PriceFilterProps) {
         gap={4}
       >
         {/* Left: Solo Filter Title & Currency Switcher */}
-        <HStack spacing={4} wrap="wrap">
+        <HStack spacing={3} wrap="wrap" justify={{ base: "space-between", sm: "flex-start" }}>
           <HStack spacing={2}>
-            <Icon as={FiFilter} boxSize={5} color="#00f2fe" />
-            <Text fontWeight="800" fontSize="16px" color="white">
-              Price & Currency Filter:
+            <Icon as={FiFilter} boxSize={4.5} color="blue.400" />
+            <Text fontWeight="800" fontSize="15px" color={textColor}>
+              Price & Currency:
             </Text>
           </HStack>
 
           {/* Unified Currency Toggle Pill (₹ INR / $ USD) */}
-          <HStack bg="black" p={1} borderRadius="full" border="1px solid" borderColor="gray.700">
+          <HStack bg={useColorModeValue("gray.100", "black")} p={1} borderRadius="full" border="1px solid" borderColor={borderColor}>
             <Button
               size="xs"
-              h="28px"
+              h="26px"
               px={3}
               rounded="full"
-              fontSize="13px"
+              fontSize="12px"
               fontWeight="800"
               colorScheme={currency === "INR" ? "green" : "gray"}
               bg={currency === "INR" ? "green.500" : "transparent"}
-              color={currency === "INR" ? "black" : "gray.300"}
+              color={currency === "INR" ? "black" : subTextColor}
               onClick={() => handleCurrencyToggle("INR")}
             >
               ₹ Rupee (INR)
@@ -90,14 +92,14 @@ export default function PriceFilter({ onPriceChange }: PriceFilterProps) {
 
             <Button
               size="xs"
-              h="28px"
+              h="26px"
               px={3}
               rounded="full"
-              fontSize="13px"
+              fontSize="12px"
               fontWeight="800"
               colorScheme={currency === "USD" ? "blue" : "gray"}
               bg={currency === "USD" ? "blue.500" : "transparent"}
-              color={currency === "USD" ? "white" : "gray.300"}
+              color={currency === "USD" ? "white" : subTextColor}
               onClick={() => handleCurrencyToggle("USD")}
             >
               $ Dollar (USD)
@@ -106,8 +108,8 @@ export default function PriceFilter({ onPriceChange }: PriceFilterProps) {
         </HStack>
 
         {/* Middle: Live Range Slider */}
-        <Box flex="1" maxW={{ base: "full", md: "380px" }} px={2}>
-          <Flex justify="space-between" fontSize="14px" fontWeight="800" color="#00f2fe" mb={1.5}>
+        <Box flex="1" maxW={{ base: "100%", md: "380px" }} px={{ base: 1, sm: 2 }}>
+          <Flex justify="space-between" fontSize="13px" fontWeight="800" color="blue.400" mb={1}>
             <Text>Min: {displayMin}</Text>
             <Text>Max: {displayMax}</Text>
           </Flex>
@@ -120,11 +122,11 @@ export default function PriceFilter({ onPriceChange }: PriceFilterProps) {
             value={priceRangeUSD}
             onChange={handleSliderChange}
           >
-            <RangeSliderTrack bg="gray.800" h="6px" borderRadius="full">
+            <RangeSliderTrack bg={useColorModeValue("gray.200", "gray.800")} h="6px" borderRadius="full">
               <RangeSliderFilledTrack bgGradient="linear(to-r, #00f2fe, #b224ef)" />
             </RangeSliderTrack>
-            <RangeSliderThumb index={0} boxSize={5} bg="#00f2fe" boxShadow="0 0 10px #00f2fe" />
-            <RangeSliderThumb index={1} boxSize={5} bg="#b224ef" boxShadow="0 0 10px #b224ef" />
+            <RangeSliderThumb index={0} boxSize={4.5} bg="#00f2fe" boxShadow="0 0 8px #00f2fe" />
+            <RangeSliderThumb index={1} boxSize={4.5} bg="#b224ef" boxShadow="0 0 8px #b224ef" />
           </RangeSlider>
         </Box>
 
@@ -132,16 +134,17 @@ export default function PriceFilter({ onPriceChange }: PriceFilterProps) {
         <Badge
           colorScheme="blue"
           variant="subtle"
-          bg="rgba(0, 242, 254, 0.1)"
-          color="#00f2fe"
+          bg={useColorModeValue("blue.50", "rgba(0, 242, 254, 0.1)")}
+          color="blue.400"
           border="1px solid"
-          borderColor="rgba(0, 242, 254, 0.3)"
+          borderColor={useColorModeValue("blue.200", "rgba(0, 242, 254, 0.3)")}
           px={3}
-          py={1.5}
+          py={1}
           borderRadius="xl"
-          fontSize="13px"
+          fontSize="12px"
           fontWeight="700"
           textAlign="center"
+          alignSelf={{ base: "flex-start", md: "center" }}
         >
           Min Limit: {currency === "INR" ? "₹100 INR" : "$1.20 USD"}
         </Badge>

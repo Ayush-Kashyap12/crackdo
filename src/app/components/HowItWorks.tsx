@@ -42,20 +42,22 @@ const STEPS = [
 ];
 
 export default function HowItWorks() {
-  const cardBg = "gray.900";
-  const borderColor = "gray.800";
+  const cardBg = useColorModeValue("white", "gray.900");
+  const borderColor = useColorModeValue("gray.200", "gray.800");
+  const textColor = useColorModeValue("gray.800", "white");
+  const subTextColor = useColorModeValue("gray.600", "gray.300");
 
   return (
-    <Box id="how_it_works" py={14} px={4} my={8}>
+    <Box id="how_it_works" py={12} px={{ base: 2, sm: 4 }} my={6}>
       <Container maxW="1250px">
-        <Stack spacing={3} textAlign="center" mb={12}>
-          <Badge colorScheme="blue" bg="blue.600" color="white" mx="auto" px={4} py={1.5} borderRadius="full" fontSize="14px" fontWeight="800">
+        <Stack spacing={3} textAlign="center" mb={10}>
+          <Badge colorScheme="blue" bg="blue.600" color="white" mx="auto" px={3.5} py={1} borderRadius="full" fontSize="13px" fontWeight="800">
             SIMPLE & SECURE
           </Badge>
-          <Heading size="xl" fontWeight="900" color="white">
+          <Heading size="lg" fontWeight="900" color={textColor} fontSize={{ base: "22px", md: "28px" }}>
             How Escrow Bidding Works on CRACKDO
           </Heading>
-          <Text color="gray.300" maxW="680px" mx="auto" fontSize="16px" fontWeight="500">
+          <Text color={subTextColor} maxW="640px" mx="auto" fontSize="15px" fontWeight="500">
             Buy and sell high-value lots with complete confidence in 4 straightforward steps.
           </Text>
         </Stack>
@@ -65,37 +67,37 @@ export default function HowItWorks() {
             <Stack
               key={idx}
               bg={cardBg}
-              p={7}
+              p={6}
               borderRadius="2xl"
               border="1px solid"
               borderColor={borderColor}
-              boxShadow="lg"
-              spacing={5}
+              boxShadow={useColorModeValue("sm", "lg")}
+              spacing={4}
               position="relative"
               transition="all 0.3s"
               _hover={{ transform: "translateY(-4px)", borderColor: "blue.400" }}
             >
               <Flex justify="space-between" align="center">
                 <Flex
-                  w={14}
-                  h={14}
+                  w={12}
+                  h={12}
                   borderRadius="xl"
                   bg="blue.500"
                   color="white"
                   align="center"
                   justify="center"
                 >
-                  <Icon as={s.icon} boxSize={6} />
+                  <Icon as={s.icon} boxSize={5} />
                 </Flex>
-                <Text fontSize="28px" fontWeight="900" color="gray.700">
+                <Text fontSize="24px" fontWeight="900" color={useColorModeValue("gray.300", "gray.700")}>
                   {s.step}
                 </Text>
               </Flex>
 
-              <Heading size="md" fontWeight="800" color="white" fontSize="18px">
+              <Heading size="sm" fontWeight="800" color={textColor} fontSize="17px">
                 {s.title}
               </Heading>
-              <Text fontSize="15px" color="gray.300" lineHeight="1.6" fontWeight="500">
+              <Text fontSize="14px" color={subTextColor} lineHeight="1.6" fontWeight="500">
                 {s.description}
               </Text>
             </Stack>

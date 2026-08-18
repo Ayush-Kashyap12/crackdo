@@ -25,7 +25,10 @@ import { useCurrency } from "../../lib/CurrencyContext";
 
 export default function Hero({ onOpenBidModal }: { onOpenBidModal?: (slug: string) => void }) {
   const { formatPrice } = useCurrency();
-  const cardBg = "gray.900";
+  const cardBg = useColorModeValue("white", "gray.900");
+  const borderColor = useColorModeValue("gray.200", "gray.800");
+  const textColor = useColorModeValue("gray.800", "white");
+  const subTextColor = useColorModeValue("gray.600", "gray.300");
 
   // Timer countdown simulation
   const [timeLeft, setTimeLeft] = useState({ hours: 23, minutes: 59, seconds: 45 });
@@ -45,147 +48,146 @@ export default function Hero({ onOpenBidModal }: { onOpenBidModal?: (slug: strin
   return (
     <Box
       className="crystal-pattern-overlay"
-      py={{ base: 12, md: 18 }}
-      px={{ base: 4, md: 8 }}
-      borderRadius="3xl"
-      mb={10}
+      py={{ base: 8, md: 14 }}
+      px={{ base: 3, md: 8 }}
+      borderRadius={{ base: "2xl", md: "3xl" }}
+      mb={8}
+      bg={useColorModeValue("white", "transparent")}
       border="1px solid"
-      borderColor="rgba(255, 255, 255, 0.15)"
-      boxShadow="0 20px 50px rgba(0,0,0,0.7)"
+      borderColor={useColorModeValue("gray.200", "rgba(255, 255, 255, 0.15)")}
+      boxShadow={useColorModeValue("md", "0 20px 50px rgba(0,0,0,0.7)")}
       position="relative"
       overflow="hidden"
+      maxW="100%"
     >
-      <Container maxW="1250px" position="relative" zIndex={2}>
-        <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={12} alignContent="center">
-          {/* Left Column: CRACKDO Hero Branding & Clean Value Prop */}
-          <Stack spacing={6} justify="center">
-            <HStack spacing={3} wrap="wrap">
+      <Container maxW="1250px" px={{ base: 1, sm: 4 }} position="relative" zIndex={2}>
+        <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={{ base: 8, lg: 12 }} alignContent="center">
+          {/* Left Column: Value Proposition */}
+          <Stack spacing={{ base: 4, md: 5 }} justify="center">
+            <HStack spacing={2} wrap="wrap">
               <Badge
                 colorScheme="blue"
-                px={4}
-                py={1.5}
+                px={3}
+                py={1}
                 borderRadius="full"
-                fontSize="15px"
-                fontWeight="800"
+                fontSize="13px"
+                fontWeight="700"
                 display="inline-flex"
                 alignItems="center"
-                gap={2}
-                bg="blue.600"
+                gap={1.5}
+                bg={useColorModeValue("blue.500", "blue.600")}
                 color="white"
               >
-                <Icon as={FiTrendingUp} boxSize={4.5} /> ⚡ AUCTION MARKETPLACE
+                <Icon as={FiTrendingUp} boxSize={4} /> ⚡ AUCTION MARKETPLACE
               </Badge>
-              <Badge colorScheme="green" variant="subtle" bg="green.900" color="green.300" border="1px solid" borderColor="green.700" px={3.5} py={1.5} borderRadius="full" fontSize="15px" fontWeight="800">
-                🚀 NEWLY LAUNCHED PLATFORM
+              <Badge colorScheme="purple" variant="subtle" px={3} py={1} borderRadius="full" fontSize="13px" fontWeight="700">
+                [Demo Preview]
               </Badge>
             </HStack>
 
             {/* CRACKDO Interactive 3D Pop-Out Logo */}
-            <Box py={2}>
-              <Text fontSize="16px" fontWeight="800" color="#00f2fe" letterSpacing="wider" textTransform="uppercase" mb={2}>
-                Hover Logo to Experience 3D Pop-Out Effect ✦
-              </Text>
+            <Box py={1} maxW="100%" overflow="hidden">
               <Logo3D size="hero" showSubtext={true} />
             </Box>
 
+            {/* Updated Benefit Headline (Font size reduced by 2px) */}
             <Heading
               as="h1"
-              fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
+              fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }}
               fontWeight="900"
               lineHeight="1.2"
               letterSpacing="tight"
-              color="white"
+              color={textColor}
             >
-              Bid, Win & Trade Verified Items with{" "}
-              <Text as="span" bgGradient="linear(to-r, #00f2fe, #f6d365, #b224ef)" bgClip="text">
-                Instant Escrow Protection
-              </Text>
+              Bid confidently. Buy securely.
             </Heading>
 
-            {/* Increased Body Text to 18px */}
-            <Text fontSize={{ base: "17px", md: "19px" }} color="gray.200" lineHeight="1.6" fontWeight="600">
-              Welcome to <strong>CRACKDO</strong>! Explore real auctions on high-end electronics, luxury watches, and gaming gear. Start bidding directly with 100% money-back escrow protection.
+            {/* Updated Subheadline (Font size reduced by 2px to 16px/17px) */}
+            <Text fontSize={{ base: "15px", md: "17px" }} color={subTextColor} lineHeight="1.6" fontWeight="500">
+              Discover live auctions from verified sellers with protected payments from bid to checkout.
             </Text>
 
-            {/* CTAs */}
-            <Stack direction={{ base: "column", sm: "row" }} spacing={4} pt={2}>
-              <Link href="#all_products">
+            {/* Main CTA (Explore Live Auctions →) */}
+            <Stack direction={{ base: "column", sm: "row" }} spacing={3} pt={2}>
+              <Link href="#all_products" style={{ width: "100%" }}>
                 <Button
                   size="lg"
-                  h="56px"
+                  h="50px"
+                  w={{ base: "100%", sm: "auto" }}
                   rounded="full"
                   colorScheme="blue"
                   bg="blue.500"
-                  _hover={{ bg: "blue.600", transform: "translateY(-2px)", boxShadow: "0 10px 25px rgba(0, 242, 254, 0.4)" }}
+                  _hover={{ bg: "blue.600", transform: "translateY(-2px)" }}
                   transition="all 0.2s"
-                  rightIcon={<Icon as={FiArrowRight} boxSize={5} />}
-                  px={9}
-                  fontSize="18px"
+                  rightIcon={<Icon as={FiArrowRight} boxSize={4.5} />}
+                  px={8}
+                  fontSize="16px"
                   fontWeight="800"
-                  boxShadow="lg"
+                  boxShadow="md"
                 >
                   Explore Live Auctions
                 </Button>
               </Link>
-              <Link href="#how_it_works">
+              <Link href="#how_it_works" style={{ width: "100%" }}>
                 <Button
                   size="lg"
-                  h="56px"
+                  h="50px"
+                  w={{ base: "100%", sm: "auto" }}
                   rounded="full"
                   variant="outline"
-                  color="white"
-                  borderColor="gray.700"
-                  _hover={{ bg: "gray.800", borderColor: "blue.400" }}
-                  px={8}
-                  fontSize="18px"
-                  fontWeight="800"
+                  color={textColor}
+                  borderColor={useColorModeValue("gray.300", "gray.700")}
+                  _hover={{ bg: useColorModeValue("gray.100", "gray.800") }}
+                  px={7}
+                  fontSize="16px"
+                  fontWeight="700"
                 >
                   How Escrow Works
                 </Button>
               </Link>
             </Stack>
 
-            {/* Clean Honest Trust Metrics */}
-            <HStack spacing={7} pt={3} fontSize="16px" color="gray.200" wrap="wrap">
-              <HStack spacing={2}>
-                <Icon as={FiShield} color="green.400" boxSize={5} />
-                <Text fontWeight="800" color="white">100% Escrow Protection</Text>
+            {/* Trust Metrics - Honest Demo Label */}
+            <HStack spacing={6} pt={2} fontSize="14px" color={subTextColor} wrap="wrap">
+              <HStack spacing={1.5}>
+                <Icon as={FiShield} color="green.400" boxSize={4.5} />
+                <Text fontWeight="700">100% Escrow Protection</Text>
               </HStack>
-              <HStack spacing={2}>
-                <Icon as={FiCheckCircle} color="blue.400" boxSize={5} />
-                <Text fontWeight="800" color="white">Verified Sellers</Text>
+              <HStack spacing={1.5}>
+                <Icon as={FiCheckCircle} color="blue.400" boxSize={4.5} />
+                <Text fontWeight="700">Verified Sellers [Demo]</Text>
               </HStack>
             </HStack>
           </Stack>
 
-          {/* Right Column: Featured Opening Auction Preview */}
-          <Flex justify="center" align="center">
+          {/* Right Column: Featured Auction Preview */}
+          <Flex justify="center" align="center" maxW="100%">
             <Box
               w="full"
-              maxW="480px"
+              maxW={{ base: "100%", sm: "440px" }}
               bg={cardBg}
               borderRadius="2xl"
-              p={6}
-              boxShadow="2xl"
+              p={{ base: 4, sm: 5 }}
+              boxShadow="xl"
               border="1px solid"
-              borderColor="rgba(255, 255, 255, 0.2)"
+              borderColor={borderColor}
               position="relative"
               transition="all 0.3s"
               _hover={{ transform: "translateY(-4px)", borderColor: "blue.400" }}
             >
-              {/* Card Live Header */}
-              <Flex justify="space-between" align="center" mb={4}>
-                <HStack spacing={2.5}>
-                  <Badge colorScheme="blue" bg="blue.600" color="white" px={3} py={1} borderRadius="full" fontSize="13px" fontWeight="800">
+              {/* Card Header */}
+              <Flex justify="space-between" align="center" mb={3} wrap="wrap" gap={2}>
+                <HStack spacing={2}>
+                  <Badge colorScheme="blue" bg="blue.600" color="white" px={2.5} py={0.5} borderRadius="full" fontSize="11px" fontWeight="800">
                     FEATURED LOT
                   </Badge>
-                  <Badge colorScheme="green" variant="subtle" bg="green.900" color="green.300" px={2.5} py={1} borderRadius="md" fontSize="13px" fontWeight="800">
-                    Verified Escrow
+                  <Badge colorScheme="purple" variant="subtle" px={2} py={0.5} borderRadius="md" fontSize="11px" fontWeight="700">
+                    Demo Lot
                   </Badge>
                 </HStack>
 
-                <HStack spacing={1.5} color="red.400" fontWeight="800" fontSize="16px">
-                  <Icon as={FiClock} boxSize={4.5} />
+                <HStack spacing={1} color="red.400" fontWeight="700" fontSize="14px">
+                  <Icon as={FiClock} />
                   <Text fontFamily="mono">
                     {String(timeLeft.hours).padStart(2, "0")}:{String(timeLeft.minutes).padStart(2, "0")}:
                     {String(timeLeft.seconds).padStart(2, "0")}
@@ -194,7 +196,7 @@ export default function Hero({ onOpenBidModal }: { onOpenBidModal?: (slug: strin
               </Flex>
 
               {/* Product Preview Image */}
-              <Box borderRadius="xl" overflow="hidden" position="relative" mb={4} h="250px" bg="gray.950">
+              <Box borderRadius="xl" overflow="hidden" position="relative" mb={3} h={{ base: "180px", sm: "220px" }} bg="gray.100">
                 <Image
                   src="https://images.unsplash.com/photo-1527977966376-1c8408f9f108?q=80&w=800&auto=format&fit=crop"
                   alt="Advanced Quadcopter Drone"
@@ -204,50 +206,50 @@ export default function Hero({ onOpenBidModal }: { onOpenBidModal?: (slug: strin
                 />
                 <Box
                   position="absolute"
-                  bottom={3}
-                  left={3}
+                  bottom={2.5}
+                  left={2.5}
                   bg="rgba(0, 0, 0, 0.85)"
-                  backdropFilter="blur(8px)"
+                  backdropFilter="blur(6px)"
                   color="white"
-                  px={3.5}
-                  py={1.5}
+                  px={3}
+                  py={1}
                   borderRadius="lg"
-                  fontSize="14px"
-                  fontWeight="800"
+                  fontSize="12px"
+                  fontWeight="700"
                 >
                   Lot #101 • Be the First Bidder!
                 </Box>
               </Box>
 
               {/* Lot Info */}
-              <Heading size="md" mb={2} noOfLines={1} color="white" fontSize="22px" fontWeight="800">
+              <Heading size="md" mb={1.5} noOfLines={1} color={textColor} fontSize="18px" fontWeight="800">
                 Advanced Quadcopter Drone 4K HDR
               </Heading>
-              <Text fontSize="16px" color="gray.300" mb={4} noOfLines={2} lineHeight="1.5" fontWeight="500">
+              <Text fontSize="14px" color={subTextColor} mb={3.5} noOfLines={2} lineHeight="1.5" fontWeight="500">
                 Equipped with 3-axis gimbal, 4K 60fps sensor, 30-min flight time, and 2.5km max range.
               </Text>
 
               {/* Current Opening Price */}
-              <Flex justify="space-between" align="center" bg="black" p={4} borderRadius="xl" border="1px solid" borderColor="gray.800">
+              <Flex justify="space-between" align="center" bg={useColorModeValue("gray.50", "black")} p={3.5} borderRadius="xl" border="1px solid" borderColor={borderColor}>
                 <Box>
-                  <Text fontSize="13px" color="gray.400" textTransform="uppercase" fontWeight="800" letterSpacing="wider">
+                  <Text fontSize="11px" color="gray.400" textTransform="uppercase" fontWeight="700" letterSpacing="wider">
                     Opening Base Price
                   </Text>
-                  <Text fontSize="30px" fontWeight="900" color="#00f2fe" lineHeight="1.1">
+                  <Text fontSize="24px" fontWeight="900" color="blue.400" lineHeight="1.1">
                     {formatPrice(799.99)}
                   </Text>
-                  <Text fontSize="14px" color="gray.400" fontWeight="700" mt={1}>
+                  <Text fontSize="12px" color="gray.400" fontWeight="600" mt={0.5}>
                     Opening Bid • Min Step {formatPrice(25)}
                   </Text>
                 </Box>
 
                 <Button
                   size="md"
-                  h="46px"
+                  h="42px"
                   colorScheme="blue"
                   rounded="lg"
-                  px={6}
-                  fontSize="16px"
+                  px={5}
+                  fontSize="14px"
                   fontWeight="800"
                   onClick={() => onOpenBidModal && onOpenBidModal("1")}
                 >
