@@ -30,27 +30,34 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import Link from "next/link";
-import { useState } from "react";
-import { FiLock, FiShield, FiTrendingUp } from "react-icons/fi";
-import { RiGithubFill, RiGithubLine } from "react-icons/ri";
-import { GITHUB_REPO } from "../constants";
+import { useSearch } from "../SearchContext";
 import ThemeToggle from "./ThemeToggle";
 import Logo3D from "../../app/components/Logo3D";
 
 export default function Header() {
   const { isOpen, onToggle } = useDisclosure();
   const { colorMode } = useColorMode();
-  const [searchQuery, setSearchQuery] = useState("");
+  const { searchQuery, setSearchQuery } = useSearch();
 
   const bgHeader = useColorModeValue("white", "gray.950");
   const borderColor = useColorModeValue("gray.200", "gray.800");
   const topBarBg = useColorModeValue("blue.900", "black");
   const textColor = useColorModeValue("gray.800", "white");
-  const navHoverColor = useColorModeValue("blue.600", "#00f2fe");
+
+  const handleSearchChange = (val: string) => {
+    setSearchQuery(val);
+    // Smooth scroll to marketplace if typing search term
+    if (val.trim().length > 0 && typeof window !== "undefined") {
+      const element = document.getElementById("all_products");
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  };
 
   return (
     <Box position="sticky" top={0} zIndex={1000} boxShadow="md" maxW="100%">
-      {/* Top Announcement Bar - Font sizes reduced by 2px */}
+      {/* Top Announcement Bar */}
       <Box bg={topBarBg} color="white" py={2} px={{ base: 3, md: 6 }} fontSize="14px" fontWeight="600" borderBottom="1px solid" borderColor="gray.800">
         <Flex maxW="1350px" mx="auto" align="center" justify="space-between">
           <HStack spacing={2} overflow="hidden">
@@ -63,12 +70,8 @@ export default function Header() {
           </HStack>
           <HStack spacing={5} display={{ base: "none", lg: "flex" }}>
             <HStack spacing={1.5}>
-              <Icon as={FiShield} boxSize={4} color="blue.400" />
-              <Text fontSize="13px" color="gray.100" fontWeight="600">100% Escrow Guarantee</Text>
-            </HStack>
-            <HStack spacing={1.5}>
-              <Icon as={FiLock} boxSize={4} color="green.400" />
-              <Text fontSize="13px" color="gray.100" fontWeight="600">Verified Sellers [Demo]</Text>
+              <Icon as={SearchIcon} boxSize={4} color="blue.400" />
+              <Text fontSize="13px" color="gray.100" fontWeight="600">Real-Time Live Search</Text>
             </HStack>
           </HStack>
         </Flex>
@@ -109,11 +112,11 @@ export default function Header() {
           </Link>
         </HStack>
 
-        {/* Global Search Bar */}
+        {/* Global Synchronized Search Bar */}
         <Box display={{ base: "none", lg: "block" }} flex="1" maxW="400px" mx={6}>
           <InputGroup size="md">
             <InputLeftElement pointerEvents="none">
-              <SearchIcon color="gray.400" boxSize={4} />
+              <SearchIcon color="blue.400" boxSize={4} />
             </InputLeftElement>
             <Input
               placeholder="Search CRACKDO auctions, watches, tech..."
@@ -121,7 +124,7 @@ export default function Header() {
               bg={useColorModeValue("gray.100", "gray.900")}
               color={textColor}
               fontSize="15px"
-              fontWeight="500"
+              fontWeight="600"
               border="1px solid"
               borderColor={useColorModeValue("gray.300", "gray.700")}
               _focus={{
@@ -130,12 +133,12 @@ export default function Header() {
                 boxShadow: "0 0 12px rgba(0,242,254,0.35)",
               }}
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => handleSearchChange(e.target.value)}
             />
           </InputGroup>
         </Box>
 
-        {/* Navigation Links - Font sizes reduced to 15px */}
+        {/* Navigation Links */}
         <Box display={{ base: "none", md: "block" }}>
           <DesktopNav />
         </Box>
@@ -258,13 +261,23 @@ const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
 };
 
 const MobileNav = () => {
+  const { searchQuery, setSearchQuery } = useSearch();
+
   return (
     <Stack bg={useColorModeValue("white", "gray.950")} p={5} display={{ md: "none" }} borderBottom="1px solid" borderColor={useColorModeValue("gray.200", "gray.800")}>
       <InputGroup size="md" mb={3}>
         <InputLeftElement pointerEvents="none">
-          <SearchIcon color="gray.400" />
+          <SearchIcon color="blue.400" />
         </InputLeftElement>
-        <Input placeholder="Search CRACKDO..." borderRadius="md" bg={useColorModeValue("gray.100", "gray.900")} color={useColorModeValue("gray.800", "white")} fontSize="15px" />
+        <Input
+          placeholder="Search CRACKDO..."
+          borderRadius="md"
+          bg={useColorModeValue("gray.100", "gray.900")}
+          color={useColorModeValue("gray.800", "white")}
+          fontSize="15px"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
       </InputGroup>
       {NAV_ITEMS.map((navItem) => (
         <MobileNavItem key={navItem.label} {...navItem} />

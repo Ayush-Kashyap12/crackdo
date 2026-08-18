@@ -31,27 +31,33 @@ import LiveTicker from "./components/LiveTicker";
 import PriceFilter from "./components/PriceFilter";
 import TrustBanner from "./components/TrustBanner";
 import { useCurrency } from "../lib/CurrencyContext";
+import { useSearch } from "../lib/SearchContext";
 
 const CATEGORIES = ["All Lots", "Electronics", "Luxury", "Gaming", "Outdoor"];
 
 const Home = () => {
   const { currency } = useCurrency();
+  const { searchQuery, setSearchQuery } = useSearch();
   const [selectedCategory, setSelectedCategory] = useState("All Lots");
-  const [searchQuery, setSearchQuery] = useState("");
   const [priceRangeUSD, setPriceRangeUSD] = useState<[number, number]>([1, 3500]);
   const [selectedProductForBid, setSelectedProductForBid] = useState<ProductDataProps | null>(null);
   const [isBidModalOpen, setIsBidModalOpen] = useState(false);
 
-  // Filter products by category, search, and price range
+  // Synchronized search filter matching productName, category, description, and specifications
   const filteredProducts = ProductData.filter((item) => {
     const matchesCategory =
       selectedCategory === "All Lots" || item.category === selectedCategory;
+
+    const query = searchQuery.trim().toLowerCase();
     const matchesSearch =
-      item.productName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.description.toLowerCase().includes(searchQuery.toLowerCase());
+      !query ||
+      item.productName.toLowerCase().includes(query) ||
+      item.description.toLowerCase().includes(query) ||
+      (item.category && item.category.toLowerCase().includes(query)) ||
+      (item.details && item.details.some((d) => d.value.toLowerCase().includes(query)));
     
     // Price filter check against item.basePrice (USD)
-    const currentPriceUSD = item.basePrice + (item.bidIncrementBy * 2);
+    const currentPriceUSD = item.basePrice;
     const matchesPrice = currentPriceUSD >= priceRangeUSD[0] && currentPriceUSD <= priceRangeUSD[1];
 
     return matchesCategory && matchesSearch && matchesPrice;
@@ -72,11 +78,11 @@ const Home = () => {
   };
 
   return (
-    <Box pb={16} position="relative">
+    <Box pb={16} position="relative" maxW="100%">
       {/* 3D Falling Crystal & Black Mirror Background Canvas */}
       <BlackMirrorCrystalBg />
 
-      <Container maxW="1250px" px={{ base: 4, md: 6 }} position="relative" zIndex={1}>
+      <Container maxW="1250px" px={{ base: 3, sm: 6 }} position="relative" zIndex={1}>
         {/* Hero Section */}
         <Hero onOpenBidModal={handleOpenBidModal} />
 
@@ -84,8 +90,8 @@ const Home = () => {
         <LiveTicker />
 
         {/* Filter & Auctions Marketplace */}
-        <Box id="all_products" pt={10} mb={14}>
-          <Stack spacing={7} mb={8}>
+        <Box id="all_products" pt={6} mb={12}>
+          <Stack spacing={6} mb={8}>
             <Flex
               direction={{ base: "column", md: "row" }}
               justify="space-between"
@@ -93,34 +99,35 @@ const Home = () => {
               gap={4}
             >
               <Box>
-                <HStack spacing={2.5} mb={1.5}>
-                  <Badge colorScheme="blue" bg="blue.600" color="white" px={3} py={1} borderRadius="full" fontSize="12px" fontWeight="800">
+                <HStack spacing={2} mb={1}>
+                  <Badge colorScheme="blue" bg="blue.600" color="white" px={2.5} py={0.5} borderRadius="full" fontSize="11px" fontWeight="800">
                     LIVE MARKETPLACE
                   </Badge>
-                  <Text fontSize="14px" color="gray.400" fontWeight="600">
+                  <Text fontSize="13px" color={useColorModeValue("gray.600", "gray.400")} fontWeight="600">
                     Showing prices in {currency === "INR" ? "₹ INR (Rupees)" : "$ USD (Dollars)"}
                   </Text>
                 </HStack>
-                <Heading size="xl" fontWeight="900" color="white" fontSize="32px">
-                  Featured Live Auctions
+                <Heading size="lg" fontWeight="900" color={useColorModeValue("gray.800", "white")} fontSize={{ base: "22px", md: "28px" }}>
+                  Featured Live Auctions {searchQuery ? `— Result for "${searchQuery}"` : ""}
                 </Heading>
               </Box>
 
-              {/* Search Bar */}
-              <Box w={{ base: "full", md: "360px" }}>
-                <InputGroup size="lg">
+              {/* Synchronized Marketplace Search Bar */}
+              <Box w={{ base: "full", md: "340px" }}>
+                <InputGroup size="md">
                   <InputLeftElement pointerEvents="none">
-                    <SearchIcon color="gray.400" boxSize={4.5} />
+                    <SearchIcon color="blue.400" boxSize={4} />
                   </InputLeftElement>
                   <Input
-                    placeholder="Filter CRACKDO auctions..."
+                    placeholder="Search auctions by keyword, brand, or model..."
                     borderRadius="xl"
-                    fontSize="16px"
-                    bg="rgba(10, 14, 23, 0.85)"
+                    fontSize="15px"
+                    fontWeight="500"
+                    bg={useColorModeValue("white", "rgba(10, 14, 23, 0.85)")}
                     backdropFilter="blur(10px)"
-                    color="white"
+                    color={useColorModeValue("gray.800", "white")}
                     border="1px solid"
-                    borderColor="gray.700"
+                    borderColor={useColorModeValue("gray.300", "gray.700")}
                     _focus={{ borderColor: "blue.400", boxShadow: "0 0 12px rgba(0,242,254,0.3)" }}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
@@ -130,26 +137,26 @@ const Home = () => {
             </Flex>
 
             {/* Category Filter Pills */}
-            <HStack spacing={3} overflowX="auto" pb={1}>
-              <Icon as={FiFilter} color="#00f2fe" boxSize={5} me={1} display={{ base: "none", sm: "block" }} />
+            <HStack spacing={2.5} overflowX="auto" pb={1} maxW="100%">
+              <Icon as={FiFilter} color="blue.400" boxSize={4.5} me={1} display={{ base: "none", sm: "block" }} />
               {CATEGORIES.map((cat) => {
                 const isActive = selectedCategory === cat;
                 return (
                   <Button
                     key={cat}
-                    size="md"
-                    h="40px"
+                    size="sm"
+                    h="36px"
                     rounded="full"
                     variant={isActive ? "solid" : "outline"}
                     colorScheme={isActive ? "blue" : "gray"}
-                    bg={isActive ? "blue.500" : "rgba(12, 16, 25, 0.7)"}
+                    bg={isActive ? "blue.500" : useColorModeValue("white", "rgba(12, 16, 25, 0.7)")}
                     backdropFilter="blur(8px)"
-                    color={isActive ? "white" : "gray.200"}
-                    borderColor={isActive ? "blue.500" : "gray.700"}
-                    _hover={{ bg: isActive ? "blue.600" : "gray.800" }}
+                    color={isActive ? "white" : useColorModeValue("gray.700", "gray.200")}
+                    borderColor={isActive ? "blue.500" : useColorModeValue("gray.300", "gray.700")}
+                    _hover={{ bg: isActive ? "blue.600" : useColorModeValue("gray.100", "gray.800") }}
                     onClick={() => setSelectedCategory(cat)}
-                    px={5}
-                    fontSize="15px"
+                    px={4}
+                    fontSize="13px"
                     fontWeight="800"
                   >
                     {cat}
@@ -164,21 +171,21 @@ const Home = () => {
 
           {/* Product Grid */}
           {filteredProducts.length > 0 ? (
-            <SimpleGrid columns={{ base: 1, sm: 2, lg: 3 }} spacing={8} justifyItems="center">
+            <SimpleGrid columns={{ base: 1, sm: 2, lg: 3 }} spacing={{ base: 6, sm: 8 }} justifyItems="center">
               {filteredProducts.map((bid) => (
                 <BidCard key={bid.slug} {...bid} onOpenBidModal={handleOpenBidModal} />
               ))}
             </SimpleGrid>
           ) : (
-            <Box textAlign="center" py={16} bg="rgba(12, 16, 25, 0.85)" backdropFilter="blur(12px)" borderRadius="2xl" border="1px solid" borderColor="gray.800">
-              <Heading size="md" mb={3} color="white" fontSize="20px">
-                No auctions match your price filter
+            <Box textAlign="center" py={12} bg={useColorModeValue("white", "rgba(12, 16, 25, 0.85)")} backdropFilter="blur(12px)" borderRadius="2xl" border="1px solid" borderColor={useColorModeValue("gray.200", "gray.800")}>
+              <Heading size="md" mb={2} color={useColorModeValue("gray.800", "white")} fontSize="18px">
+                No auctions match "{searchQuery}"
               </Heading>
-              <Text fontSize="16px" color="gray.400" mb={6}>
-                Try expanding your price range or resetting filters.
+              <Text fontSize="14px" color={useColorModeValue("gray.600", "gray.400")} mb={5}>
+                Try expanding your search query or resetting filters.
               </Text>
-              <Button size="md" colorScheme="blue" fontSize="15px" fontWeight="800" onClick={() => { setSelectedCategory("All Lots"); setSearchQuery(""); setPriceRangeUSD([1, 3500]); }}>
-                Reset All Filters
+              <Button size="md" colorScheme="blue" fontSize="14px" fontWeight="800" onClick={() => { setSelectedCategory("All Lots"); setSearchQuery(""); setPriceRangeUSD([1, 3500]); }}>
+                Clear Search & Reset Filters
               </Button>
             </Box>
           )}
